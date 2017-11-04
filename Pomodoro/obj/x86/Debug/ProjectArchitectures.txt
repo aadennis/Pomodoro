@@ -1,0 +1,1 @@
+C:\Github\Pomodoro\Pomodoro\Pomodoro\Pomodoro.csproj;x86
