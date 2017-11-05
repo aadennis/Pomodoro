@@ -1,0 +1,12 @@
+This app is about as simple as it gets.
+From a testing perspective, personally, I did this:
+checked on Windows 10 desktop, and Windows 10 phone
+played with the 2 sliders to make sure their values rippled through to the text boxes
+checked that the following combinations worked:
+default duration (20 minutes) with default interval prompt (5 minutes)
+duration of 4 minutes with interval of 1 minute
+checked that sound toggled on and off correctly
+checked that performance seemed acceptable.
+
+Thanks a lot of reviewing :-)
+Dennis

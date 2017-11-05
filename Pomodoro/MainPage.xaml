@@ -29,16 +29,20 @@
             <Slider x:Name="IntervalSlider" Minimum="1" Maximum="5"
                 Margin="10" ValueChanged="MyIntervalSlider_ValueChanged"  VerticalAlignment="Center">
             </Slider>
-            <TextBlock Text="Time Remaining"/>
-            <TextBlock Name="TimeRemaining" Text="" />
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Minutes Remaining:"/>
+                <TextBlock Name="TimeRemaining" Text="" />
+            </StackPanel>
+
         </StackPanel>
 
 
         <StackPanel Orientation="Horizontal" Grid.Row="1">
-        <Button Name="btnStart" Content="Start"  
-                Click="BtnStart_Click" Margin="20"></Button>
-        <Button Name="btnReset" Content="Reset"
-                Click="BtnReset_Click" Margin="20"></Button>
+            <Button Name="btnStart" Content="Start"  
+                Click="BtnStart_Click" Margin="0,0,0,15"></Button>
+            <Button Name="btnReset" Content="Reset"
+                Click="BtnReset_Click" Margin="15,0,0,15"></Button>
+            <ToggleSwitch Header="Sound" IsOn="True" Margin="15,0,0,0" Toggled="ToggleSwitch_Toggled" Height="80" />
         </StackPanel>
 
     </Grid>

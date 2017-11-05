@@ -25,14 +25,16 @@ namespace Pomodoro
         {
             this.InitializeComponent();
            
-            ResetDurationAndReminder();
+            ResetDefaults();
         }
 
-        private void ResetDurationAndReminder()
+        private void ResetDefaults()
         {
             // default is 20 minutes, and 5 minutes for the interval...
             PomodoroDuration = Duration.Text = "20";
             PomodoroReminderInterval = ReminderInterval.Text = "5";
+
+            ElementSoundPlayer.State = ElementSoundPlayerState.On;
         }
 
         private void MySlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
@@ -68,12 +70,14 @@ namespace Pomodoro
 
         private void BtnReset_Click(object sender, RoutedEventArgs e)
         {
-            ResetDurationAndReminder();
+            ResetDefaults();
 
         }
         public static async void ReadText(string myText)
         {
             if (IsReading) return;
+            if (ElementSoundPlayer.State == ElementSoundPlayerState.Off) return;
+
             IsReading = true;
 
             var mediaPlayer = new MediaElement();
@@ -141,6 +145,24 @@ namespace Pomodoro
         private void ReminderInterval_TextChanged(object sender, TextChangedEventArgs e)
         {
             PomodoroReminderInterval = ReminderInterval.Text;
+        }
+
+        private void ToggleSwitch_Toggled(object sender, RoutedEventArgs e)
+        {
+            var toggleSwitch = sender as ToggleSwitch;
+            if (toggleSwitch != null)
+            {
+                if (toggleSwitch.IsOn == true)
+                {
+                    ElementSoundPlayer.State = ElementSoundPlayerState.On;
+                    ElementSoundPlayer.Volume = 1.0;
+                }
+                else
+                {
+                    ElementSoundPlayer.State = ElementSoundPlayerState.Off;
+                    ElementSoundPlayer.Volume = 0.0;
+                }
+            }
         }
     }
 }

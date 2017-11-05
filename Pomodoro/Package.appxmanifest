@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="b7049a73-9d8d-42b8-a5f8-5bc0732b5841" Publisher="CN=denni" Version="1.0.0.0" />
-  <mp:PhoneIdentity PhoneProductId="b7049a73-9d8d-42b8-a5f8-5bc0732b5841" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
+  <Identity Name="16419WorkandPlay.PomodoroPopup" Publisher="CN=A24C8BA4-D91D-40ED-90A3-1F523778BB7B" Version="1.1.4.0" />
+  <mp:PhoneIdentity PhoneProductId="a4264510-dbd0-41ec-8a24-7f7d6a413a0d" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
-    <DisplayName>Pomodoro</DisplayName>
-    <PublisherDisplayName>denni</PublisherDisplayName>
+    <DisplayName>Pomodoro Popup</DisplayName>
+    <PublisherDisplayName>Work and Play</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Dependencies>
@@ -15,8 +15,8 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="Pomodoro.App">
-      <uap:VisualElements DisplayName="Pomodoro" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="Pomodoro" BackgroundColor="transparent">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png">
+      <uap:VisualElements DisplayName="Pomodoro Popup" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="Pomodoro" BackgroundColor="transparent">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" ShortName="Pomodoro" Square310x310Logo="Assets\LargeTile.png" Square71x71Logo="Assets\SmallTile.png">
         </uap:DefaultTile>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
         <uap:InitialRotationPreference>
