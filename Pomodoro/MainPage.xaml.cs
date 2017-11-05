@@ -13,17 +13,20 @@ namespace Pomodoro
         DateTimeOffset startTime;
         DateTimeOffset lastTime;
         DateTimeOffset stopTime;
-        int timesTicked = 1;
-        int timesToTick;
+        int timesTicked = 0;
+        int _pomodoroDuration;
         static bool IsReading = false;
         public string PomodoroDuration { get; private set; }
+        public string PomodoroReminderInterval { get; private set; }
+
 
 
         public MainPage()
         {
             this.InitializeComponent();
             // default is 20 minutes...
-            PomodoroDuration = Duration.Text = "20"; 
+            PomodoroDuration = Duration.Text = "20";
+            PomodoroReminderInterval = ReminderInterval.Text = "5";
         }
 
         private void MySlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
@@ -40,7 +43,7 @@ namespace Pomodoro
             }
         }
 
-        private void btnStart_Click(object sender, RoutedEventArgs e)
+        private void BtnStart_Click(object sender, RoutedEventArgs e)
         {
             DispatcherTimerSetup();
             ReadText(PomodoroDuration);
@@ -63,15 +66,15 @@ namespace Pomodoro
 
         public void DispatcherTimerSetup()
         {
-            timesToTick = Int32.Parse(PomodoroDuration); // minutes
+            _pomodoroDuration = Int32.Parse(PomodoroDuration); // minutes
             dispatcherTimer = new DispatcherTimer();
             dispatcherTimer.Tick += DispatcherTimer_Tick;
-            // The interval is always one minute...
-            dispatcherTimer.Interval = new TimeSpan(0, 1, 0);
+            dispatcherTimer.Interval = new TimeSpan(0, Int32.Parse(PomodoroReminderInterval), 0);
             startTime = DateTimeOffset.Now;
             lastTime = startTime;
-            var startTimerSpeech = string.Format($"You have {timesToTick} minutes remaining");
-            TimeRemaining.Text = $"{timesToTick} minutes remaining";
+            var startTimerSpeech = string.Format($"You have {_pomodoroDuration} minutes remaining");
+            TimeRemaining.Text = $"{_pomodoroDuration} minutes remaining";
+            timesTicked = Int32.Parse(PomodoroReminderInterval);
             ReadText(startTimerSpeech);
             dispatcherTimer.Start();
         }
@@ -81,7 +84,7 @@ namespace Pomodoro
             var time = DateTimeOffset.Now;
             var span = time - lastTime;
             lastTime = time;
-            var ticksRemaining = timesToTick - timesTicked;
+            var ticksRemaining = _pomodoroDuration - timesTicked;
             string remainingFormat = string.Empty;
             switch (ticksRemaining)
             {
@@ -98,8 +101,8 @@ namespace Pomodoro
             }
             ReadText(remainingFormat);
             TimeRemaining.Text = remainingFormat;
-            timesTicked++;
-            if (timesTicked > timesToTick)
+            timesTicked = timesTicked + Int32.Parse(PomodoroReminderInterval);
+            if (timesTicked > _pomodoroDuration)
             {
                 stopTime = time;
                 dispatcherTimer.Stop();
@@ -110,6 +113,10 @@ namespace Pomodoro
         private void Duration_TextChanged(object sender, TextChangedEventArgs e)
         {
             PomodoroDuration = Duration.Text;
+        }
+        private void ReminderInterval_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            PomodoroReminderInterval = ReminderInterval.Text;
         }
     }
 }
