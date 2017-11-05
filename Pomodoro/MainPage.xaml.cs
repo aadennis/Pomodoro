@@ -86,7 +86,7 @@ namespace Pomodoro
             lastTime = time;
             var ticksRemaining = _pomodoroDuration - timesTicked;
             string remainingFormat = string.Empty;
-            switch (ticksRemaining)
+            switch (ticksRemaining <= 0 ? 0 : ticksRemaining)
             {
                 case 1:
                     remainingFormat = "You have 1 minute remaining";

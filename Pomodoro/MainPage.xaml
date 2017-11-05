@@ -11,6 +11,8 @@
             <RowDefinition Height="1*"></RowDefinition>
             <RowDefinition Height="1*"></RowDefinition>
             <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="2*"></RowDefinition>
+
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
@@ -23,6 +25,12 @@
         <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0">
             <TextBlock Text="Duration"/>
             <TextBox Name="Duration" TextChanged="Duration_TextChanged" />
+        </StackPanel>
+        <StackPanel Orientation="Vertical" Grid.Row="2" Grid.Column="0">
+            <TextBlock Text="Reminder Interval"/>
+            <TextBox Name="ReminderInterval" TextChanged="ReminderInterval_TextChanged" />
+        </StackPanel>
+        <StackPanel Grid.Row="3" Grid.Column="0">
             <TextBlock Text="Time Remaining"/>
             <TextBox Name="TimeRemaining" />
         </StackPanel>
@@ -31,11 +39,8 @@
                 TickFrequency="5" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1"
                 Margin="10" ValueChanged="MySlider_ValueChanged"  VerticalAlignment="Center">
         </Slider>
-        <StackPanel Orientation="Vertical" Grid.Row="2" Grid.Column="0">
-            <TextBlock Text="Reminder Interval"/>
-            <TextBox Name="ReminderInterval" TextChanged="ReminderInterval_TextChanged" />
-        </StackPanel>
-        <Button Name="btnStart" Content="Start" Grid.Row="3" Grid.Column="0" Click="btnStart_Click"></Button>
+        
+        <Button Name="btnStart" Content="Start" Grid.Row="4" Grid.Column="0" Click="BtnStart_Click"></Button>
 
     </Grid>
 </Page>
