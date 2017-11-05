@@ -24,7 +24,13 @@ namespace Pomodoro
         public MainPage()
         {
             this.InitializeComponent();
-            // default is 20 minutes...
+           
+            ResetDurationAndReminder();
+        }
+
+        private void ResetDurationAndReminder()
+        {
+            // default is 20 minutes, and 5 minutes for the interval...
             PomodoroDuration = Duration.Text = "20";
             PomodoroReminderInterval = ReminderInterval.Text = "5";
         }
@@ -34,6 +40,17 @@ namespace Pomodoro
             HandleSliderChange(sender);
         }
 
+        private void MyIntervalSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            if (sender is Slider slider)
+            {
+                // the requested interval must not be greater than the requested session duration...
+                var interval = slider.Value > Int32.Parse(Duration.Text) ? Int32.Parse(Duration.Text) : slider.Value;
+                ReminderInterval.Text = interval.ToString();
+                PomodoroReminderInterval = ReminderInterval.Text;
+            }
+        }
+  
         private void HandleSliderChange(object sender)
         {
             if (sender is Slider slider)
@@ -47,6 +64,12 @@ namespace Pomodoro
         {
             DispatcherTimerSetup();
             ReadText(PomodoroDuration);
+        }
+
+        private void BtnReset_Click(object sender, RoutedEventArgs e)
+        {
+            ResetDurationAndReminder();
+
         }
         public static async void ReadText(string myText)
         {
@@ -73,7 +96,7 @@ namespace Pomodoro
             startTime = DateTimeOffset.Now;
             lastTime = startTime;
             var startTimerSpeech = string.Format($"You have {_pomodoroDuration} minutes remaining");
-            TimeRemaining.Text = $"{_pomodoroDuration} minutes remaining";
+            TimeRemaining.Text = $"{_pomodoroDuration}";
             timesTicked = Int32.Parse(PomodoroReminderInterval);
             ReadText(startTimerSpeech);
             dispatcherTimer.Start();
@@ -85,22 +108,23 @@ namespace Pomodoro
             var span = time - lastTime;
             lastTime = time;
             var ticksRemaining = _pomodoroDuration - timesTicked;
-            string remainingFormat = string.Empty;
-            switch (ticksRemaining <= 0 ? 0 : ticksRemaining)
+            string remainingSpokenFormat = string.Empty;
+            var tempMinutesLeft = ticksRemaining <= 0 ? 0 : ticksRemaining;
+            switch (tempMinutesLeft)
             {
                 case 1:
-                    remainingFormat = "You have 1 minute remaining";
+                    remainingSpokenFormat = "You have 1 minute remaining";
                     break;
                 case 0:
-                    remainingFormat = "Your session has finished";
+                    remainingSpokenFormat = "Your session has finished";
                     break;
                 default:
-                    remainingFormat = $"You have {ticksRemaining} minutes remaining";
+                    remainingSpokenFormat = $"You have {ticksRemaining} minutes remaining";
                     break;
 
             }
-            ReadText(remainingFormat);
-            TimeRemaining.Text = remainingFormat;
+            ReadText(remainingSpokenFormat);
+            TimeRemaining.Text = tempMinutesLeft.ToString();
             timesTicked = timesTicked + Int32.Parse(PomodoroReminderInterval);
             if (timesTicked > _pomodoroDuration)
             {
