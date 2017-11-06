@@ -33,8 +33,8 @@ namespace Pomodoro
             // default is 20 minutes, and 5 minutes for the interval...
             PomodoroDuration = Duration.Text = "20";
             PomodoroReminderInterval = ReminderInterval.Text = "5";
-
             ElementSoundPlayer.State = ElementSoundPlayerState.On;
+            dispatcherTimer = null;
         }
 
         private void MySlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
@@ -65,6 +65,7 @@ namespace Pomodoro
         private void BtnStart_Click(object sender, RoutedEventArgs e)
         {
             DispatcherTimerSetup();
+            ResetDefaults();
             ReadText(PomodoroDuration);
         }
 
@@ -130,10 +131,11 @@ namespace Pomodoro
             ReadText(remainingSpokenFormat);
             TimeRemaining.Text = tempMinutesLeft.ToString();
             timesTicked = timesTicked + Int32.Parse(PomodoroReminderInterval);
-            if (timesTicked > _pomodoroDuration)
+            if (timesTicked >= _pomodoroDuration)
             {
                 stopTime = time;
                 dispatcherTimer.Stop();
+                dispatcherTimer = null;
                 span = stopTime - startTime;
             }
         }
