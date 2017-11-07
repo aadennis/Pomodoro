@@ -14,11 +14,11 @@ namespace Pomodoro
         DateTimeOffset lastTime;
         DateTimeOffset stopTime;
         bool pageLoaded = false;
-        int timesTicked = 0;
-        int _pomodoroDuration;
+        int elapsedMinutes = 0;
+        int _requestedDurationInMinutes;
         static bool IsReading = false;
         public string PomodoroDuration { get; private set; }
-        public string PomodoroReminderInterval { get; private set; }
+        public string RequestedIntervalInMinutes { get; private set; }
 
         public MainPage()
         {
@@ -28,7 +28,7 @@ namespace Pomodoro
         private void ResetDefaults()
         {
             PomodoroDuration = Duration.Text = "20";
-            PomodoroReminderInterval = ReminderInterval.Text = "5";
+            RequestedIntervalInMinutes = ReminderInterval.Text = "5";
 
 
 
@@ -54,7 +54,7 @@ namespace Pomodoro
                 // the requested interval must not be greater than the requested session duration...
                 var interval = slider.Value > Int32.Parse(Duration.Text) ? Int32.Parse(Duration.Text) : slider.Value;
                 ReminderInterval.Text = interval.ToString();
-                PomodoroReminderInterval = ReminderInterval.Text;
+                RequestedIntervalInMinutes = ReminderInterval.Text;
             }
         }
 
@@ -99,15 +99,15 @@ namespace Pomodoro
 
         public void DispatcherTimerSetup()
         {
-            _pomodoroDuration = Int32.Parse(PomodoroDuration); // minutes
+            _requestedDurationInMinutes = Int32.Parse(PomodoroDuration); // minutes
             dispatcherTimer = new DispatcherTimer();
             dispatcherTimer.Tick += DispatcherTimer_Tick;
-            dispatcherTimer.Interval = new TimeSpan(0, Int32.Parse(PomodoroReminderInterval), 0);
+            dispatcherTimer.Interval = new TimeSpan(0, Int32.Parse(RequestedIntervalInMinutes), 0);
             startTime = DateTimeOffset.Now;
             lastTime = startTime;
-            var startTimerSpeech = string.Format($"You have {_pomodoroDuration} minutes remaining");
-            TimeRemaining.Text = $"{_pomodoroDuration}";
-            timesTicked = Int32.Parse(PomodoroReminderInterval);
+            var startTimerSpeech = string.Format($"You have {_requestedDurationInMinutes} minutes remaining");
+            TimeRemaining.Text = $"{_requestedDurationInMinutes}";
+            elapsedMinutes = Int32.Parse(RequestedIntervalInMinutes);
             ReadText(startTimerSpeech);
             dispatcherTimer.Start();
         }
@@ -117,7 +117,7 @@ namespace Pomodoro
             var time = DateTimeOffset.Now;
             var span = time - lastTime;
             lastTime = time;
-            var ticksRemaining = _pomodoroDuration - timesTicked;
+            var ticksRemaining = _requestedDurationInMinutes - elapsedMinutes;
             string remainingSpokenFormat = string.Empty;
             var tempMinutesLeft = ticksRemaining <= 0 ? 0 : ticksRemaining;
             switch (tempMinutesLeft)
@@ -135,13 +135,14 @@ namespace Pomodoro
             }
             ReadText(remainingSpokenFormat);
             TimeRemaining.Text = tempMinutesLeft.ToString();
-            timesTicked = timesTicked + Int32.Parse(PomodoroReminderInterval);
-            if (timesTicked >= _pomodoroDuration)
+            elapsedMinutes = elapsedMinutes + Int32.Parse(RequestedIntervalInMinutes);
+            if (elapsedMinutes > _requestedDurationInMinutes)
             {
                 stopTime = time;
                 dispatcherTimer.Stop();
                 dispatcherTimer = null;
                 span = stopTime - startTime;
+                elapsedMinutes = 0;
             }
         }
 
@@ -152,8 +153,8 @@ namespace Pomodoro
         }
         private void ReminderInterval_TextChanged(object sender, TextChangedEventArgs e)
         {
-            PomodoroReminderInterval = ReminderInterval.Text;
-            IntervalSlider.Value = int.Parse(PomodoroReminderInterval);
+            RequestedIntervalInMinutes = ReminderInterval.Text;
+            IntervalSlider.Value = int.Parse(RequestedIntervalInMinutes);
         }
 
         private void ToggleSwitch_Toggled(object sender, RoutedEventArgs e)
