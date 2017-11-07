@@ -19,20 +19,16 @@ namespace Pomodoro
         public string PomodoroDuration { get; private set; }
         public string PomodoroReminderInterval { get; private set; }
 
-
-
         public MainPage()
         {
             this.InitializeComponent();
-           
-            ResetDefaults();
         }
 
         private void ResetDefaults()
         {
-            // default is 20 minutes, and 5 minutes for the interval...
             PomodoroDuration = Duration.Text = "20";
             PomodoroReminderInterval = ReminderInterval.Text = "5";
+
             ElementSoundPlayer.State = ElementSoundPlayerState.On;
             dispatcherTimer = null;
         }
@@ -44,6 +40,11 @@ namespace Pomodoro
 
         private void MyIntervalSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
+            HandleIntervalSliderChange(sender);
+        }
+
+        private void HandleIntervalSliderChange(object sender)
+        {
             if (sender is Slider slider)
             {
                 // the requested interval must not be greater than the requested session duration...
@@ -52,7 +53,7 @@ namespace Pomodoro
                 PomodoroReminderInterval = ReminderInterval.Text;
             }
         }
-  
+
         private void HandleSliderChange(object sender)
         {
             if (sender is Slider slider)
@@ -143,6 +144,7 @@ namespace Pomodoro
         private void Duration_TextChanged(object sender, TextChangedEventArgs e)
         {
             PomodoroDuration = Duration.Text;
+            DurationSlider.Value = Int32.Parse(PomodoroDuration);
         }
         private void ReminderInterval_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -165,6 +167,11 @@ namespace Pomodoro
                     ElementSoundPlayer.Volume = 0.0;
                 }
             }
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            ResetDefaults();
         }
     }
 }
