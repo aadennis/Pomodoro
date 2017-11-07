@@ -29,7 +29,7 @@ namespace Pomodoro
         {
             PomodoroDuration = Duration.Text = "20";
             PomodoroReminderInterval = ReminderInterval.Text = "5";
-            IntervalSlider.Value = int.Parse(PomodoroReminderInterval);
+
 
 
             ElementSoundPlayer.State = ElementSoundPlayerState.On;
@@ -69,8 +69,8 @@ namespace Pomodoro
 
         private void BtnStart_Click(object sender, RoutedEventArgs e)
         {
+            dispatcherTimer = null;
             DispatcherTimerSetup();
-            ResetDefaults();
             ReadText(PomodoroDuration);
         }
 
