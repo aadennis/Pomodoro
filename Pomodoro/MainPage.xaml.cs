@@ -13,6 +13,7 @@ namespace Pomodoro
         DateTimeOffset startTime;
         DateTimeOffset lastTime;
         DateTimeOffset stopTime;
+        bool pageLoaded = false;
         int timesTicked = 0;
         int _pomodoroDuration;
         static bool IsReading = false;
@@ -28,23 +29,26 @@ namespace Pomodoro
         {
             PomodoroDuration = Duration.Text = "20";
             PomodoroReminderInterval = ReminderInterval.Text = "5";
+            IntervalSlider.Value = int.Parse(PomodoroReminderInterval);
+
 
             ElementSoundPlayer.State = ElementSoundPlayerState.On;
             dispatcherTimer = null;
         }
 
-        private void MySlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        private void DurationSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
-            HandleSliderChange(sender);
+            HandleDurationSliderChange(sender);
         }
 
-        private void MyIntervalSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        private void IntervalSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
             HandleIntervalSliderChange(sender);
         }
 
         private void HandleIntervalSliderChange(object sender)
         {
+            if (!pageLoaded) return;
             if (sender is Slider slider)
             {
                 // the requested interval must not be greater than the requested session duration...
@@ -54,7 +58,7 @@ namespace Pomodoro
             }
         }
 
-        private void HandleSliderChange(object sender)
+        private void HandleDurationSliderChange(object sender)
         {
             if (sender is Slider slider)
             {
@@ -171,6 +175,7 @@ namespace Pomodoro
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
+            pageLoaded = true;
             ResetDefaults();
         }
     }
