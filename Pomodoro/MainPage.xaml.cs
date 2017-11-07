@@ -153,6 +153,7 @@ namespace Pomodoro
         private void ReminderInterval_TextChanged(object sender, TextChangedEventArgs e)
         {
             PomodoroReminderInterval = ReminderInterval.Text;
+            IntervalSlider.Value = int.Parse(PomodoroReminderInterval);
         }
 
         private void ToggleSwitch_Toggled(object sender, RoutedEventArgs e)
