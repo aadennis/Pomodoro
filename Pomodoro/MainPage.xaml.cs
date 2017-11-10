@@ -10,6 +10,7 @@ namespace Pomodoro
     public sealed partial class MainPage : Page
     {
         DispatcherTimer dispatcherTimer;
+        DispatcherTimer wallClock;
         DateTimeOffset startTime;
         DateTimeOffset lastTime;
         DateTimeOffset stopTime;
@@ -23,17 +24,16 @@ namespace Pomodoro
         public MainPage()
         {
             this.InitializeComponent();
+            RunWallclock();
         }
 
         private void ResetDefaults()
         {
             PomodoroDuration = Duration.Text = "20";
             RequestedIntervalInMinutes = ReminderInterval.Text = "5";
-
-
-
             ElementSoundPlayer.State = ElementSoundPlayerState.On;
             dispatcherTimer = null;
+            wallClock = null;
         }
 
         private void DurationSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
@@ -97,12 +97,14 @@ namespace Pomodoro
             IsReading = false;
         }
 
-        public void DispatcherTimerSetup()
-        {
+        public void DispatcherTimerSetup() {
             _requestedDurationInMinutes = Int32.Parse(PomodoroDuration); // minutes
             dispatcherTimer = new DispatcherTimer();
             dispatcherTimer.Tick += DispatcherTimer_Tick;
             dispatcherTimer.Interval = new TimeSpan(0, Int32.Parse(RequestedIntervalInMinutes), 0);
+
+
+
             startTime = DateTimeOffset.Now;
             lastTime = startTime;
             var startTimerSpeech = string.Format($"You have {_requestedDurationInMinutes} minutes remaining");
@@ -110,6 +112,18 @@ namespace Pomodoro
             elapsedMinutes = Int32.Parse(RequestedIntervalInMinutes);
             ReadText(startTimerSpeech);
             dispatcherTimer.Start();
+        }
+
+        private void RunWallclock() {
+            CurrentTime.Text = DateTime.Now.ToString("h:mm tt");
+            wallClock = new DispatcherTimer();
+            wallClock.Tick += WallClock_Tick;
+            wallClock.Interval = new TimeSpan(0, 1, 0);
+            wallClock.Start();
+        }
+
+        private void WallClock_Tick(object sender, object e) {
+            CurrentTime.Text = DateTime.Now.ToString("h:mm tt");
         }
 
         void DispatcherTimer_Tick(object sender, object e)
@@ -180,5 +194,6 @@ namespace Pomodoro
             pageLoaded = true;
             ResetDefaults();
         }
+
     }
 }

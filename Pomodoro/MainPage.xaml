@@ -8,7 +8,7 @@
     mc:Ignorable="d"
     Loaded="Page_Loaded"
     >
-    <Grid Background="white" Margin="20">
+    <Grid Background="white" Margin="20,0,20,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="4*"></RowDefinition>
             <RowDefinition Height="1*"></RowDefinition>
@@ -20,6 +20,7 @@
 
 
         <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Grid.Row="0" >
+            <TextBlock Name="CurrentTime" Text="aaa" />
             <TextBlock Text="Pomodoro!" FontSize="48"/>
             <TextBlock Text="Duration"/>
             <TextBox Name="Duration" TextChanged="Duration_TextChanged" />
