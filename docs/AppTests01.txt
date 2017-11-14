@@ -1,0 +1,40 @@
+Basic tests (Phone and PC)
+1. Enter duration that is not a number
+
+On exit from box
+
+Move DurationSlider.Value = Int32.Parse(PomodoroDuration); to Start Button
+
+(and ditto interval)
+
+Test for max value (Duration and interval). If > than 60,5, reduce to 60, 5
+
+Duration
+If > max_duration, set to max_duration
+
+Interval
+if > duration, set to duration
+if > max_interval, set to max_interval
+
+Tests
+PC and Phone
+1. text - 4 seconds duration - slider should follow
+2. text - 1 second interval - slider should follow
+3. slider - 4 seconds duration - text should follow 
+4. slider - 1 second interval - text should follow 
+
+Reset:
+Set duration to 3, interval to 1,
+Start
+While running, 
+Reset
+Set duration to 3, interval to 1,
+Start
+While running, 
+Reset
+Set duration to 3, interval to 1,
+Start
+Expected result - if you want for 3 minutes, there is no repetition, and only 1 end event.
+
+
+

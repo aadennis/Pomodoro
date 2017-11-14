@@ -4,6 +4,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.Media.SpeechSynthesis;
+using Pomodoro.ViewModel;
 
 namespace Pomodoro
 {
@@ -27,7 +28,7 @@ namespace Pomodoro
         const int DEFAULT_DURATION = 20;
         const int DEFAULT_INTERVAL = 5;
 
-
+        public Utilities u = new Utilities();
 
 
         public MainPage()
@@ -38,11 +39,17 @@ namespace Pomodoro
 
         private void ResetDefaults()
         {
-            PomodoroDuration = Duration.Text = "20";
-            RequestedIntervalInMinutes = ReminderInterval.Text = "5";
+            //PomodoroDuration = Duration.Text = DEFAULT_DURATION.ToString();
+            //RequestedIntervalInMinutes = ReminderInterval.Text = DEFAULT_INTERVAL.ToString();
             ElementSoundPlayer.State = ElementSoundPlayerState.On;
-            dispatcherTimer = null;
             wallClock = null;
+            ticksRemaining = 0;
+            _requestedDurationInMinutes = 0;
+            elapsedMinutes = 0;
+            dispatcherTimer.Start();
+            ResetDuration(DEFAULT_DURATION);
+            ResetInterval(DEFAULT_INTERVAL);
+            u.ResetToRun();
         }
 
         private void DurationSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
@@ -57,7 +64,6 @@ namespace Pomodoro
 
         private void HandleIntervalSliderChange(object sender)
         {
-            if (!pageLoaded) return;
             if (sender is Slider slider)
             {
                 // the requested interval must not be greater than the requested session duration...
@@ -78,7 +84,7 @@ namespace Pomodoro
 
         private void BtnStart_Click(object sender, RoutedEventArgs e)
         {
-            dispatcherTimer = null;
+            if (!u.CanStart()) return;
             DispatcherTimerSetup();
             ReadText(PomodoroDuration);
         }
@@ -108,11 +114,12 @@ namespace Pomodoro
 
         public void DispatcherTimerSetup() {
             _requestedDurationInMinutes = Int32.Parse(PomodoroDuration); // minutes
-            dispatcherTimer = new DispatcherTimer();
-            dispatcherTimer.Tick += DispatcherTimer_Tick;
-            dispatcherTimer.Interval = new TimeSpan(0, Int32.Parse(RequestedIntervalInMinutes), 0);
 
-
+            if (dispatcherTimer == null) {
+                dispatcherTimer = new DispatcherTimer();
+                dispatcherTimer.Tick += DispatcherTimer_Tick;
+                dispatcherTimer.Interval = new TimeSpan(0, Int32.Parse(RequestedIntervalInMinutes), 0);
+            }
 
             startTime = DateTimeOffset.Now;
             lastTime = startTime;
@@ -135,12 +142,14 @@ namespace Pomodoro
             CurrentTime.Text = DateTime.Now.ToString("h:mm tt");
         }
 
+        int ticksRemaining;
+
         void DispatcherTimer_Tick(object sender, object e)
         {
             var time = DateTimeOffset.Now;
             var span = time - lastTime;
             lastTime = time;
-            var ticksRemaining = _requestedDurationInMinutes - elapsedMinutes;
+            ticksRemaining = _requestedDurationInMinutes - elapsedMinutes;
             string remainingSpokenFormat = string.Empty;
             var tempMinutesLeft = ticksRemaining <= 0 ? 0 : ticksRemaining;
             switch (tempMinutesLeft)
@@ -149,6 +158,7 @@ namespace Pomodoro
                     remainingSpokenFormat = "You have 1 minute remaining";
                     break;
                 case 0:
+                    u.ResetToRun();
                     remainingSpokenFormat = "Your session has finished";
                     break;
                 default:
@@ -163,7 +173,6 @@ namespace Pomodoro
             {
                 stopTime = time;
                 dispatcherTimer.Stop();
-                dispatcherTimer = null;
                 span = stopTime - startTime;
                 elapsedMinutes = 0;
             }
@@ -171,12 +180,14 @@ namespace Pomodoro
 
 
         private void ResetDuration(int temp) {
+            if (temp == 0) temp = DEFAULT_DURATION;
             PomodoroDuration = temp.ToString();
             Duration.Text = temp.ToString();
             DurationSlider.Value = temp;
         }
 
         private void ResetInterval(int temp) {
+            if (temp == 0) temp = DEFAULT_INTERVAL;
             RequestedIntervalInMinutes = temp.ToString();
             ReminderInterval.Text = temp.ToString();
             IntervalSlider.Value = temp;
@@ -203,7 +214,7 @@ namespace Pomodoro
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             pageLoaded = true;
-            ResetDefaults();
+            //ResetDefaults();
         }
 
         private void ReminderInterval_LostFocus(object sender, RoutedEventArgs e) {
