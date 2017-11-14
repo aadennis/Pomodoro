@@ -21,6 +21,11 @@ namespace Pomodoro
         public string PomodoroDuration { get; private set; }
         public string RequestedIntervalInMinutes { get; private set; }
 
+        const int MAX_DURATION = 60;
+        const int MAX_INTERVAL = 5;
+
+
+
         public MainPage()
         {
             this.InitializeComponent();
@@ -162,13 +167,33 @@ namespace Pomodoro
 
         private void Duration_TextChanged(object sender, TextChangedEventArgs e)
         {
-            PomodoroDuration = Duration.Text;
-            DurationSlider.Value = Int32.Parse(PomodoroDuration);
+            if (int.TryParse(Duration.Text, out int temp)) {
+                // the requested duration must not be greater than the max duration...
+                temp = temp > MAX_DURATION ? MAX_DURATION : temp;
+                PomodoroDuration = temp.ToString();
+                Duration.Text = temp.ToString();
+                DurationSlider.Value = temp;
+            } else {
+                Duration.Text = string.Empty;
+            }
         }
         private void ReminderInterval_TextChanged(object sender, TextChangedEventArgs e)
         {
-            RequestedIntervalInMinutes = ReminderInterval.Text;
-            IntervalSlider.Value = int.Parse(RequestedIntervalInMinutes);
+            if (int.TryParse(ReminderInterval.Text, out int temp)) {
+              
+                // the requested interval must not be greater than the current duration...
+                int sliderTemp = (int) DurationSlider.Value;
+                temp = temp > sliderTemp ? sliderTemp : temp;
+
+                // the requested interval must not be greater than the max interval...
+                temp = temp > MAX_INTERVAL ? MAX_INTERVAL : temp;
+
+                RequestedIntervalInMinutes = temp.ToString();
+                ReminderInterval.Text = temp.ToString();
+                IntervalSlider.Value = temp;
+            } else {
+                ReminderInterval.Text = string.Empty;
+            }
         }
 
         private void ToggleSwitch_Toggled(object sender, RoutedEventArgs e)

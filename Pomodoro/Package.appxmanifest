@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="16419WorkandPlay.PomodoroPopup" Publisher="CN=A24C8BA4-D91D-40ED-90A3-1F523778BB7B" Version="1.1.9.0" />
+  <Identity Name="16419WorkandPlay.PomodoroPopup" Publisher="CN=A24C8BA4-D91D-40ED-90A3-1F523778BB7B" Version="1.1.10.0" />
   <mp:PhoneIdentity PhoneProductId="a4264510-dbd0-41ec-8a24-7f7d6a413a0d" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>Pomodoro Popup</DisplayName>
