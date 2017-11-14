@@ -23,12 +23,12 @@
             <TextBlock Name="CurrentTime" Text="aaa" />
             <TextBlock Text="Pomodoro!" FontSize="48"/>
             <TextBlock Text="Duration"/>
-            <TextBox Name="Duration" TextChanged="Duration_TextChanged" InputScope="Digits" />
+            <TextBox Name="Duration" InputScope="Digits" LostFocus="DurationTextBox_LostFocus" />
             <Slider x:Name="DurationSlider" Minimum="1" Maximum="60"
                 Margin="10" ValueChanged="DurationSlider_ValueChanged"  VerticalAlignment="Center">
             </Slider>
             <TextBlock Text="Reminder Interval"/>
-            <TextBox Name="ReminderInterval" TextChanged="ReminderInterval_TextChanged" InputScope="Digits" />
+            <TextBox Name="ReminderInterval" InputScope="Digits" LostFocus="ReminderInterval_LostFocus" />
             <Slider x:Name="IntervalSlider" Minimum="1" Maximum="5"
                 Margin="10" ValueChanged="IntervalSlider_ValueChanged"  VerticalAlignment="Center">
             </Slider>

@@ -24,6 +24,10 @@ namespace Pomodoro
         const int MAX_DURATION = 60;
         const int MAX_INTERVAL = 5;
 
+        const int DEFAULT_DURATION = 20;
+        const int DEFAULT_INTERVAL = 5;
+
+
 
 
         public MainPage()
@@ -165,35 +169,17 @@ namespace Pomodoro
             }
         }
 
-        private void Duration_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (int.TryParse(Duration.Text, out int temp)) {
-                // the requested duration must not be greater than the max duration...
-                temp = temp > MAX_DURATION ? MAX_DURATION : temp;
-                PomodoroDuration = temp.ToString();
-                Duration.Text = temp.ToString();
-                DurationSlider.Value = temp;
-            } else {
-                Duration.Text = string.Empty;
-            }
+
+        private void ResetDuration(int temp) {
+            PomodoroDuration = temp.ToString();
+            Duration.Text = temp.ToString();
+            DurationSlider.Value = temp;
         }
-        private void ReminderInterval_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (int.TryParse(ReminderInterval.Text, out int temp)) {
-              
-                // the requested interval must not be greater than the current duration...
-                int sliderTemp = (int) DurationSlider.Value;
-                temp = temp > sliderTemp ? sliderTemp : temp;
 
-                // the requested interval must not be greater than the max interval...
-                temp = temp > MAX_INTERVAL ? MAX_INTERVAL : temp;
-
-                RequestedIntervalInMinutes = temp.ToString();
-                ReminderInterval.Text = temp.ToString();
-                IntervalSlider.Value = temp;
-            } else {
-                ReminderInterval.Text = string.Empty;
-            }
+        private void ResetInterval(int temp) {
+            RequestedIntervalInMinutes = temp.ToString();
+            ReminderInterval.Text = temp.ToString();
+            IntervalSlider.Value = temp;
         }
 
         private void ToggleSwitch_Toggled(object sender, RoutedEventArgs e)
@@ -220,5 +206,30 @@ namespace Pomodoro
             ResetDefaults();
         }
 
+        private void ReminderInterval_LostFocus(object sender, RoutedEventArgs e) {
+            if (int.TryParse(ReminderInterval.Text, out int temp)) {
+
+                // the requested interval must not be greater than the current duration...
+                int sliderTemp = (int)DurationSlider.Value;
+                temp = temp > sliderTemp ? sliderTemp : temp;
+
+                // the requested interval must not be greater than the max interval...
+                temp = temp > MAX_INTERVAL ? MAX_INTERVAL : temp;
+
+                ResetInterval(temp);
+            } else {
+                ResetInterval(DEFAULT_INTERVAL);
+            }
+        }
+
+        private void DurationTextBox_LostFocus(object sender, RoutedEventArgs e) {
+            if (int.TryParse(Duration.Text, out int temp)) {
+                // the requested duration must not be greater than the max duration...
+                temp = temp > MAX_DURATION ? MAX_DURATION : temp;
+                ResetDuration(temp);
+            } else {
+                ResetDuration(DEFAULT_DURATION);
+            }
+        }
     }
 }
