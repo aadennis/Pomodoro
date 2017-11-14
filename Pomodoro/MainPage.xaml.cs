@@ -34,6 +34,7 @@ namespace Pomodoro
         public MainPage()
         {
             this.InitializeComponent();
+            this.Loaded += Page_Loaded;
             RunWallclock();
         }
 
@@ -214,7 +215,8 @@ namespace Pomodoro
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             pageLoaded = true;
-            //ResetDefaults();
+            ResetInterval(DEFAULT_INTERVAL);
+            ResetDuration(DEFAULT_DURATION);
         }
 
         private void ReminderInterval_LostFocus(object sender, RoutedEventArgs e) {

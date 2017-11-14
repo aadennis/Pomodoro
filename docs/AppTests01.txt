@@ -35,6 +35,9 @@ Reset
 Set duration to 3, interval to 1,
 Start
 Expected result - if you want for 3 minutes, there is no repetition, and only 1 end event.
+--
+Click start button repeatedly
+--
 
 
 
