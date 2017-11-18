@@ -7,17 +7,6 @@ namespace TinyPrism.ViewModel {
         const int DEFAULT_DURATION = 20;
         string _lastSomeNumber = DEFAULT_DURATION.ToString();
 
-        private string _name;
-
-        public string Name {
-            get { return _name; }
-            set {
-                if (_name == value) return;
-                _name = value;
-                RaisePropertyChanged(nameof(Name));
-            }
-        }
-
         private string _someNumber;
 
         public string SomeNumber {
@@ -36,12 +25,8 @@ namespace TinyPrism.ViewModel {
             }
         }
 
-
         public MahVm() {
-            Name = "TweetyPie";
             SomeNumber = "22";
         }
     }
-
-   
 }
