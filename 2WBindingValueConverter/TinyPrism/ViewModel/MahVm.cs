@@ -5,6 +5,7 @@ using Windows.UI.Xaml.Data;
 namespace TinyPrism.ViewModel {
     public class MahVm : BindableBase {
         const int DEFAULT_DURATION = 20;
+        string _lastSomeNumber = DEFAULT_DURATION.ToString();
 
         private string _name;
 
@@ -24,11 +25,13 @@ namespace TinyPrism.ViewModel {
             set {
                 if (_someNumber == value) return;
                 if (!int.TryParse(value, out int dummy)) {
-                    _someNumber = DEFAULT_DURATION.ToString(); //arbitrary value on failure
+                    // entered number is not valid - reset to previous value
+                    _someNumber = _lastSomeNumber;
                 }
                 else {
-                    _someNumber = value;
-                }
+                    // ok...
+                    _someNumber = _lastSomeNumber = value;
+                 }
                 RaisePropertyChanged(nameof(SomeNumber));
             }
         }
