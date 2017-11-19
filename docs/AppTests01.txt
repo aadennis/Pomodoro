@@ -39,5 +39,10 @@ Expected result - if you want for 3 minutes, there is no repetition, and only 1 
 Click start button repeatedly
 --
 
-
-
+  // the requested interval must not be greater than the current duration...
+  
+ // the requested interval must not be greater than the max interval...
+ 
+  // the requested duration must not be greater than the max duration...
+  
+  

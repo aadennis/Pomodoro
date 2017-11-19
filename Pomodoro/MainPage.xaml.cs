@@ -22,12 +22,6 @@ namespace Pomodoro
         public string PomodoroDuration { get; private set; }
         public string RequestedIntervalInMinutes { get; private set; }
 
-        const int MAX_DURATION = 60;
-        const int MAX_INTERVAL = 5;
-
-        const int DEFAULT_DURATION = 20;
-        const int DEFAULT_INTERVAL = 5;
-
         public Utilities u = new Utilities();
 
 
@@ -45,44 +39,11 @@ namespace Pomodoro
             ElementSoundPlayer.State = ElementSoundPlayerState.On;
             wallClock = null;
             ticksRemaining = 0;
-            _requestedDurationInMinutes = 0;
+            u.Interval = "0";
             elapsedMinutes = 0;
             dispatcherTimer.Start();
-            ResetDuration(DEFAULT_DURATION);
-            ResetInterval(DEFAULT_INTERVAL);
             u.ResetToRun();
         }
-
-        private void DurationSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
-        {
-            HandleDurationSliderChange(sender);
-        }
-
-        private void IntervalSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
-        {
-            HandleIntervalSliderChange(sender);
-        }
-
-        private void HandleIntervalSliderChange(object sender)
-        {
-            if (sender is Slider slider)
-            {
-                // the requested interval must not be greater than the requested session duration...
-                var interval = slider.Value > Int32.Parse(Duration.Text) ? Int32.Parse(Duration.Text) : slider.Value;
-                ReminderInterval.Text = interval.ToString();
-                RequestedIntervalInMinutes = ReminderInterval.Text;
-            }
-        }
-
-        private void HandleDurationSliderChange(object sender)
-        {
-            if (sender is Slider slider)
-            {
-                Duration.Text = slider.Value.ToString();
-                PomodoroDuration = Duration.Text;
-            }
-        }
-
         private void BtnStart_Click(object sender, RoutedEventArgs e)
         {
             if (!u.CanStart()) return;
@@ -114,19 +75,19 @@ namespace Pomodoro
         }
 
         public void DispatcherTimerSetup() {
-            _requestedDurationInMinutes = Int32.Parse(PomodoroDuration); // minutes
+            _requestedDurationInMinutes = Int32.Parse(u.Duration); // minutes
 
             if (dispatcherTimer == null) {
                 dispatcherTimer = new DispatcherTimer();
                 dispatcherTimer.Tick += DispatcherTimer_Tick;
-                dispatcherTimer.Interval = new TimeSpan(0, Int32.Parse(RequestedIntervalInMinutes), 0);
+                dispatcherTimer.Interval = new TimeSpan(0, Int32.Parse(u.Interval), 0);
             }
 
             startTime = DateTimeOffset.Now;
             lastTime = startTime;
             var startTimerSpeech = string.Format($"You have {_requestedDurationInMinutes} minutes remaining");
             TimeRemaining.Text = $"{_requestedDurationInMinutes}";
-            elapsedMinutes = Int32.Parse(RequestedIntervalInMinutes);
+            elapsedMinutes = Int32.Parse(u.Interval);
             ReadText(startTimerSpeech);
             dispatcherTimer.Start();
         }
@@ -150,7 +111,8 @@ namespace Pomodoro
             var time = DateTimeOffset.Now;
             var span = time - lastTime;
             lastTime = time;
-            ticksRemaining = _requestedDurationInMinutes - elapsedMinutes;
+            Int32.TryParse(u.Duration, out int x);
+            ticksRemaining =  x - elapsedMinutes;
             string remainingSpokenFormat = string.Empty;
             var tempMinutesLeft = ticksRemaining <= 0 ? 0 : ticksRemaining;
             switch (tempMinutesLeft)
@@ -169,7 +131,7 @@ namespace Pomodoro
             }
             ReadText(remainingSpokenFormat);
             TimeRemaining.Text = tempMinutesLeft.ToString();
-            elapsedMinutes = elapsedMinutes + Int32.Parse(RequestedIntervalInMinutes);
+            elapsedMinutes = elapsedMinutes + Int32.Parse(u.Interval);
             if (elapsedMinutes > _requestedDurationInMinutes)
             {
                 stopTime = time;
@@ -181,17 +143,11 @@ namespace Pomodoro
 
 
         private void ResetDuration(int temp) {
-            if (temp == 0) temp = DEFAULT_DURATION;
-            PomodoroDuration = temp.ToString();
-            Duration.Text = temp.ToString();
-            DurationSlider.Value = temp;
+            u.Duration = u.DefaultDuration;
         }
 
         private void ResetInterval(int temp) {
-            if (temp == 0) temp = DEFAULT_INTERVAL;
-            RequestedIntervalInMinutes = temp.ToString();
-            ReminderInterval.Text = temp.ToString();
-            IntervalSlider.Value = temp;
+            u.Interval = u.DefaultInterval;
         }
 
         private void ToggleSwitch_Toggled(object sender, RoutedEventArgs e)
@@ -215,34 +171,10 @@ namespace Pomodoro
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             pageLoaded = true;
-            ResetInterval(DEFAULT_INTERVAL);
-            ResetDuration(DEFAULT_DURATION);
+            u.Interval = u.DefaultInterval;
+            u.Duration = u.DefaultDuration;
         }
 
-        private void ReminderInterval_LostFocus(object sender, RoutedEventArgs e) {
-            if (int.TryParse(ReminderInterval.Text, out int temp)) {
-
-                // the requested interval must not be greater than the current duration...
-                int sliderTemp = (int)DurationSlider.Value;
-                temp = temp > sliderTemp ? sliderTemp : temp;
-
-                // the requested interval must not be greater than the max interval...
-                temp = temp > MAX_INTERVAL ? MAX_INTERVAL : temp;
-
-                ResetInterval(temp);
-            } else {
-                ResetInterval(DEFAULT_INTERVAL);
-            }
-        }
-
-        private void DurationTextBox_LostFocus(object sender, RoutedEventArgs e) {
-            if (int.TryParse(Duration.Text, out int temp)) {
-                // the requested duration must not be greater than the max duration...
-                temp = temp > MAX_DURATION ? MAX_DURATION : temp;
-                ResetDuration(temp);
-            } else {
-                ResetDuration(DEFAULT_DURATION);
-            }
-        }
+       
     }
 }
