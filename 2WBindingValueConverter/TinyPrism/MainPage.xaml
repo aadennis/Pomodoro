@@ -1,0 +1,22 @@
+﻿<Page
+    x:Class="TinyPrism.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converters="using:TinyPrism.Converters"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <converters:StringToDoubleConverter x:Key="STDC"/>
+    </UserControl.Resources>
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <StackPanel Orientation="Vertical">
+            <TextBox HorizontalAlignment="Left" Height="40" Margin="52,45,0,0" TextWrapping="Wrap" Text="{x:Bind Path=mahVm.SomeNumber, Mode=TwoWay}" 
+                     VerticalAlignment="Top" Width="221"/>
+            <TextBox HorizontalAlignment="Left" Height="40" Margin="52,45,0,0" TextWrapping="Wrap" Text="{x:Bind Path=mahVm.SomeNumber, Mode=TwoWay}" 
+                     VerticalAlignment="Top" Width="221"/>
+            <Slider Value="{x:Bind mahVm.SomeNumber, Converter={StaticResource STDC}, Mode=TwoWay}"/>
+        </StackPanel>
+    </Grid>
+</Page>
