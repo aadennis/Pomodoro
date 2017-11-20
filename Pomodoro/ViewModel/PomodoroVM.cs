@@ -4,7 +4,7 @@ using System.Windows.Input;
 using System;
 
 namespace Pomodoro.ViewModel {
-    public class Utilities : BindableBase {
+    public class PomodoroVM : BindableBase {
         public bool IsRunning { get; private set; }
 
         const int MAX_DURATION = 60;
@@ -15,7 +15,7 @@ namespace Pomodoro.ViewModel {
         public DelegateCommand StartCommand { get; set; }
         public DelegateCommand ResetCommand { get; set; }
 
-        public Utilities() {
+        public PomodoroVM() {
             IsRunning = false;
             StartCommand = new DelegateCommand(Start, CanStart);
             ResetCommand = new DelegateCommand(Reset, CanReset);
@@ -78,8 +78,12 @@ namespace Pomodoro.ViewModel {
             get { return _interval; }
             set {
                 if (_interval == value) return;
-                if (!int.TryParse(value, out int validInteger)) {
+
+                int.TryParse(value, out int validInteger);
+                if (validInteger == 0 || value == "0") {
                     _interval = DEFAULT_INTERVAL.ToString();
+                } else if (validInteger > int.Parse(MAX_INTERVAL.ToString())) {
+                    _interval = MAX_INTERVAL.ToString();
                 } else if (validInteger > int.Parse(Duration)) {
                     _interval = Duration;
                 }

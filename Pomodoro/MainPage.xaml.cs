@@ -22,7 +22,7 @@ namespace Pomodoro
         public string PomodoroDuration { get; private set; }
         public string RequestedIntervalInMinutes { get; private set; }
 
-        public Utilities u = new Utilities();
+        public PomodoroVM u = new PomodoroVM();
 
 
         public MainPage()
